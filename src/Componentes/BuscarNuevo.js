@@ -564,7 +564,7 @@ class BuscarNuevo extends React.Component {
                         <form>
                             <div className="SplitPane row">
                                 <div className="col-xs-3 margen2">
-                                    <input ref={(input) => this.nombre = input} type="text" maxLength="100" placeholder="Nombres Apelllidos" />
+                                    <input ref={(input) => this.nombre = input} type="text" maxLength="100" placeholder="Apelllido Paterno Apelllido Materno" />
                                 </div>
                                 <div className="col-xs-2 margen2">
                                     <button className="waves-effect waves-light btn-large center" type="submit" onClick={this.onSubmitNombre}>
