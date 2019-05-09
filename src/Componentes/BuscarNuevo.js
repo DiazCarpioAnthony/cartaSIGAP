@@ -846,6 +846,7 @@ class BuscarNuevo extends React.Component {
                         swal("Eliminado exitosamente", "", "success");
                         this.setState({
                             estado: false,
+                            
                         });
                     } else {
                         swal("Oops, algo salió mal", "", "error");
