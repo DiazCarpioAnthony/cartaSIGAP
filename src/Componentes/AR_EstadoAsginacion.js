@@ -1,5 +1,5 @@
 import React from 'react'
-import CONFIG1 from '../Configuracion/Config1'
+import CONFIG from '../Configuracion/Config'
 import {Button, Modal, ModalHeader, ModalBody, ModalFooter, Table} from 'reactstrap'
 
 class AR_EstadoAsignacion extends React.Component {
@@ -22,13 +22,13 @@ class AR_EstadoAsignacion extends React.Component {
     toggle = (e) => {
         let id_alum = this.props.recibo[0].idAlum;
         console.log(id_alum);
-            fetch(CONFIG1 + 'alumnoalumnoprograma/buscar/' + id_alum)
+            fetch(CONFIG + 'alumnoalumnoprograma/buscar/' + id_alum)
                 .then((response) => {
                     return response.json();
                 })
                 .then((asignado) => {
                     if(asignado.length != 0){
-                        fetch(CONFIG1 + '/programa/buscarPrograma/' + asignado.idPrograma)
+                        fetch(CONFIG + '/programa/buscarPrograma/' + asignado.idPrograma)
                             .then((response) => {
                                 return response.json();
                             })

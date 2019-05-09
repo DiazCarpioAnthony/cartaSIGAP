@@ -2,7 +2,7 @@ import React from 'react'
 import '../App.css';
 import Select from 'react-select'
 import swal from 'sweetalert'
-import CONFIG1 from '../Configuracion/Config1';
+import CONFIG from '../Configuracion/Config';
 import AR_tableHeaderRecibo from './AR_tableHeaderRecibo'
 import AR_tableHeaderReciboResultado from './AR_tableHeaderReciboResultado'
 import AR_CodigoAsignacion from './AR_CodigoAsignacion'
@@ -182,7 +182,7 @@ class BuscarNuevo extends React.Component {
                 nombre: '',
             })
             //alert("Prueba de estado global "+this.state.estado);/*-------------------------------------------*/
-            fetch(CONFIG1 + 'recaudaciones/rec/' + rec)
+            fetch(CONFIG + 'recaudaciones/rec/' + rec)
                 .then((response) => {
                     return response.json();
                 })
@@ -217,7 +217,7 @@ class BuscarNuevo extends React.Component {
                         console.log(this.state.objAlumnos);
 
 
-                        fetch(CONFIG1 + 'alumnoprograma/buscarc/' + this.state.objRecaudaciones[0].codAlum)
+                        fetch(CONFIG + 'alumnoprograma/buscarc/' + this.state.objRecaudaciones[0].codAlum)
                             .then((response) => {
                                 return response.json();
                             })
@@ -286,7 +286,7 @@ class BuscarNuevo extends React.Component {
                 nombre: '',
             })
             
-            fetch(CONFIG1 + '/recaudaciones/listarPendientes/'+fechaInicio+'/'+fechaFin)/*PONER PARAMETROS LAS FECHAS Y LISTO*/
+            fetch(CONFIG + '/recaudaciones/listarPendientes/'+fechaInicio+'/'+fechaFin)/*PONER PARAMETROS LAS FECHAS Y LISTO*/
                 .then((response) => {
                     return response.json();
                 })
@@ -724,7 +724,7 @@ class BuscarNuevo extends React.Component {
 
 
         if (this.state.alumno != null) {
-            fetch(CONFIG1 + 'recaudaciones/actualizar/' + this.state.objRecaudaciones[0].idRec + '/' + this.state.alumno.codAlumno + '/' + this.state.alumno.idPrograma, {
+            fetch(CONFIG + 'recaudaciones/actualizar/' + this.state.objRecaudaciones[0].idRec + '/' + this.state.alumno.codAlumno + '/' + this.state.alumno.idPrograma, {
                 headers: {
                     'Content-Type': 'application/json'
                 },
@@ -757,7 +757,7 @@ class BuscarNuevo extends React.Component {
 
     onSubmitReasignar = (e) => {
         if (this.state.alumno != null) {
-            fetch(CONFIG1 + 'alumnoalumnoprograma/actualizar/' + this.state.objRecaudaciones[0].idAlum + '/' + this.state.alumno.codAlumno + '/' + this.state.alumno.idPrograma)
+            fetch(CONFIG + 'alumnoalumnoprograma/actualizar/' + this.state.objRecaudaciones[0].idAlum + '/' + this.state.alumno.codAlumno + '/' + this.state.alumno.idPrograma)
                 .then((response) => {
                     if (response) {
                         console.log(response);
@@ -838,8 +838,7 @@ class BuscarNuevo extends React.Component {
         }
 
         if (this.state.estado || this.state.detalleRecaudaciones.estado == "true") {//m Y ANTHONY
-            fetch(CONFIG1 + '/recaudaciones/desasignar/' + id_Rec)//m------DESASIGNAR
-                //fetch(CONFIG1 + 'alumnoalumnoprograma/eliminar/' + id_alum)
+            fetch(CONFIG + '/recaudaciones/desasignar/' + id_Rec)//m------DESASIGNAR
                 .then((response) => {
                     if (response) {
                         console.log(response);
@@ -896,7 +895,7 @@ class BuscarNuevo extends React.Component {
     }
 
     buscarDni = (dni) => {
-        fetch(CONFIG1 + 'alumnoprograma/buscard/' + dni)
+        fetch(CONFIG + 'alumnoprograma/buscard/' + dni)
             .then((response) => {
                 return response.json();
             })
@@ -909,7 +908,7 @@ class BuscarNuevo extends React.Component {
                         var e = {
                             codAlumno: alumnos[i].codAlumno,
                             idPrograma: alumnos[i].idPrograma,
-                            siglaProg: alumnos[i].nom_programa,
+                            siglaProg: alumnos[i].siglaProg,/*-ACTUALIZA SIGLAPROG-*/
                             value: alumnos[i].codAlumno + " / " + alumnos[i].apePaterno + " " + alumnos[i].apeMaterno + " " + alumnos[i].nomAlumno + " / " + alumnos[i].nom_programa,
                             label: alumnos[i].codAlumno + " / " + alumnos[i].apePaterno + " " + alumnos[i].apeMaterno + " " + alumnos[i].nomAlumno + " / " + alumnos[i].nom_programa
                         }
@@ -937,7 +936,7 @@ class BuscarNuevo extends React.Component {
 
     buscarCodigo = (codigo) => {
         console.log(codigo, "Codigo");
-        fetch(CONFIG1 + 'alumnoprograma/buscarc/' + codigo)
+        fetch(CONFIG + 'alumnoprograma/buscarc/' + codigo)
             .then((response) => {
                 return response.json();
             })
@@ -950,7 +949,7 @@ class BuscarNuevo extends React.Component {
                         var e = {
                             codAlumno: alumnos[i].codAlumno,
                             idPrograma: alumnos[i].idPrograma,
-                            siglaProg: alumnos[i].nom_programa,
+                            siglaProg: alumnos[i].siglaProg,/*-ACTUALIZA SIGLAPROG-*/
                             value: alumnos[i].codAlumno + " / " + alumnos[i].apePaterno + " " + alumnos[i].apeMaterno + " " + alumnos[i].nomAlumno + " / " + alumnos[i].nom_programa,
                             label: alumnos[i].codAlumno + " / " + alumnos[i].apePaterno + " " + alumnos[i].apeMaterno + " " + alumnos[i].nomAlumno + " / " + alumnos[i].nom_programa
                         }
@@ -994,7 +993,7 @@ class BuscarNuevo extends React.Component {
 
         var mostrar=false;
 
-        fetch(CONFIG1 + 'alumnoprograma/leer/' + nuevoNombre)
+        fetch(CONFIG + 'alumnoprograma/leer/' + nuevoNombre)
             .then((response) => {
                 return response.json();
             })
@@ -1007,7 +1006,7 @@ class BuscarNuevo extends React.Component {
                         var e = {
                             codAlumno: alumnos[i].codAlumno,
                             idPrograma: alumnos[i].idPrograma,
-                            siglaProg: alumnos[i].nom_programa,
+                            siglaProg: alumnos[i].siglaProg,/*-ACTUALIZA SIGLAPROG-*/
                             value: alumnos[i].codAlumno + " / " + alumnos[i].apePaterno + " " + alumnos[i].apeMaterno + " " + alumnos[i].nomAlumno + " / " + alumnos[i].nom_programa,
                             label: alumnos[i].codAlumno + " / " + alumnos[i].apePaterno + " " + alumnos[i].apeMaterno + " " + alumnos[i].nomAlumno + " / " + alumnos[i].nom_programa
                         }
@@ -1035,7 +1034,7 @@ class BuscarNuevo extends React.Component {
     buscarCodigoAlumnoPrograma = (codAlum, idProg, e) => {
         console.log(codAlum + ' ' + idProg, "AlumnoPrograma:codAlum,idProg");
 
-        fetch(CONFIG1 + 'alumnoprograma/leer/' + codAlum + '/' + idProg)
+        fetch(CONFIG + 'alumnoprograma/leer/' + codAlum + '/' + idProg)
             .then((response) => {
                 return response.json();
             })
@@ -1048,7 +1047,7 @@ class BuscarNuevo extends React.Component {
                         var e = {
                             codAlumno: alumnos[i].codAlumno,
                             idPrograma: alumnos[i].idPrograma,
-                            siglaProg: alumnos[i].nom_programa,
+                            siglaProg: alumnos[i].siglaProg,/*-ACTUALIZA SIGLAPROG-*/
                             value: alumnos[i].codAlumno + " / " + alumnos[i].apePaterno + " " + alumnos[i].apeMaterno + " " + alumnos[i].nomAlumno + " / " + alumnos[i].nom_programa,
                             label: alumnos[i].codAlumno + " / " + alumnos[i].apePaterno + " " + alumnos[i].apeMaterno + " " + alumnos[i].nomAlumno + " / " + alumnos[i].nom_programa
                         }
@@ -1071,11 +1070,9 @@ class BuscarNuevo extends React.Component {
                     });
 
                 }
-                console.log("---OBJJ22---");
-                console.log(this.state.objAlumnos[0].nom_programa);
             })
             .catch((error) => {
-                swal("Algo salío mal", "", "error");
+                swal("Algo salío mal", "", "error");//MIGUEL CORREGIR
                 console.log(error);
             });
         e.preventDefault();
