@@ -4,7 +4,9 @@ import Select from 'react-select'
 import swal from 'sweetalert'
 import CONFIG1 from '../Configuracion/Config1';
 import AR_tableHeaderRecibo from './AR_tableHeaderRecibo'
+import AR_tableHeaderReciboResultado from './AR_tableHeaderReciboResultado'
 import AR_CodigoAsignacion from './AR_CodigoAsignacion'
+import AR_ReciboResultadoAlumnos from './AR_ReciboResultadoAlumnos'
 import AR_EstadoAsignacion from './AR_EstadoAsginacion'
 import AR_ProgramaAsignacion from './AR_ProgramaAsignacion'
 import AR_PendienteAsignacion from './AR_PendienteAsignacion';
@@ -34,6 +36,8 @@ class BuscarNuevo extends React.Component {
 
             buscarRec: false,
             asignarRec: false,
+            
+            mostrarResultadoAlumnos: false,
 
             dni: '',
             codigo: '',
@@ -57,9 +61,11 @@ class BuscarNuevo extends React.Component {
                 estado: '',
                 codAlum: '',//m
                 idProg: '',//m
+                siglaPrograma: '',//m
             },
 
             estado: false,
+            nomProg: '',
 
             buscarPendiente: false,
         }
@@ -105,6 +111,7 @@ class BuscarNuevo extends React.Component {
                 buscarRec: false,
                 asignarRec: false,
                 buscarPendiente: false,
+                mostrarResultadoAlumnos: false,
             });
             this.props.flag(false);
         } else if (selectedOption.value == 'Búsqueda por recibo') {
@@ -116,6 +123,7 @@ class BuscarNuevo extends React.Component {
                 buscarRec: false,
                 asignarRec: false,
                 buscarPendiente: false,
+                mostrarResultadoAlumnos: false,
             });
             this.props.flag(false);
         } else if (selectedOption.value == 'Pendiente de asignación') {
@@ -127,6 +135,7 @@ class BuscarNuevo extends React.Component {
                 buscarRec: false,
                 asignarRec: false,
                 buscarPendiente: false,
+                mostrarResultadoAlumnos: false,
             });
             this.props.flag(false);
         }
@@ -162,6 +171,7 @@ class BuscarNuevo extends React.Component {
                 ObjAsignación: [],
                 buscarRec: false,
                 asignarRec: false,
+                mostrarResultadoAlumnos: false,
                 estado: false,
                 alumno: null,
                 opcAlumno: [],
@@ -190,7 +200,6 @@ class BuscarNuevo extends React.Component {
                         this.buscarCodigoAlumnoPrograma(this.state.objRecaudaciones[0].codAlum, this.state.objRecaudaciones[0].idProg, e);
 
                         console.log("---ObjAlumnos---");
-                        console.log(this.state.objAlumnos);
 
                         this.setState({
                             buscarRec: true,
@@ -216,11 +225,12 @@ class BuscarNuevo extends React.Component {
                                 console.log("---Alumnos---");
                                 console.log(alumnos);
                                 this.setState({
-                                    objAlumnos: alumnos
+                                    objAlumnos: alumnos,
                                 });
-                                console.log("---ObjAlumnos---");
-                                console.log(this.state.objAlumnos);
-                                console.log(this.state.detalleRecaudaciones);
+                                console.log("---ObjAlumnosAAAA---");
+                                console.log("---NOMBRE PROGRAMAAA---");
+                                console.log(this.state.detalleRecaudaciones.siglaPrograma);
+                                
 
                                 if (this.state.objAlumnos.length > 0) {
                                     this.setState({
@@ -401,7 +411,8 @@ class BuscarNuevo extends React.Component {
                     fecha: objRec[0].fecha,
                     estado: objRecibo_estado,
                     codAlumno: objRec[0].codAlum,//m
-                    programa: objRec[0].idProg//m
+                    programa: objRec[0].idProg,//m
+                    siglaPrograma: objRec[0].siglaProg,//m
                 }
             });
         } else if (objRec[0].moneda == '113') {
@@ -415,7 +426,8 @@ class BuscarNuevo extends React.Component {
                     fecha: objRec[0].fecha,
                     estado: objRecibo_estado,
                     codAlumno: objRec[0].codAlum,//m
-                    programa: objRec[0].idProg//m
+                    programa: objRec[0].idProg,//m
+                    siglaPrograma: objRec[0].siglaProg,//m
                 }
             });
         } else {
@@ -429,7 +441,8 @@ class BuscarNuevo extends React.Component {
                     fecha: objRec[0].fecha,
                     estado: objRecibo_estado,
                     codAlumno: objRec[0].codAlum,//m
-                    programa: objRec[0].idProg//m
+                    programa: objRec[0].idProg,//m
+                    siglaPrograma: objRec[0].siglaProg,//m
                 }
             });
         }
@@ -497,7 +510,7 @@ class BuscarNuevo extends React.Component {
                                             </td>
 
                                             <td className="td1">
-                                                <AR_ProgramaAsignacion estadoAsignacion={this.state.detalleRecaudaciones.estado} programa={this.state.detalleRecaudaciones.programa} recibo={this.state.objRecaudaciones} alumno={this.state.objAlumnos} codAlumno={this.state.objAlumnos.codAlum} asignado={this.state.ObjAsignación} />
+                                                <AR_ProgramaAsignacion siglaPrograma={this.state.detalleRecaudaciones.siglaPrograma} />
                                             </td>
 
                                             <td className="td1">
@@ -538,6 +551,11 @@ class BuscarNuevo extends React.Component {
                                             </button>
                                         </div>
                                     </div>
+                                    {this.state.mostrarResultadoAlumnos ? (
+                                        <div className="col col-lg-12">
+                                                <AR_ReciboResultadoAlumnos listAlumnos={this.state.objAlumnos}  />
+                                        </div>
+                                    ) : (null)}
                                 </div>
                             </div>
                         ) : (null)}
@@ -609,10 +627,13 @@ class BuscarNuevo extends React.Component {
         if (this.Validar(this.state.dni, this.state.codigo, this.state.apePat, this.state.apeMat, this.state.nombre)) {
             if (this.state.dni != '' && this.state.codigo == '' && this.state.apePat == '' && this.state.apeMat == '' && this.state.nombre == '') {
                 this.buscarDni(this.state.dni, e);
+                
             } else if (this.state.dni == '' && this.state.codigo != '' && this.state.apePat == '' && this.state.apeMat == '' && this.state.nombre == '') {
                 this.buscarCodigo(this.state.codigo, e);
+                
             } else if (this.state.dni == '' && this.state.codigo == '' && this.state.apePat != '' || this.state.apeMat != '' || this.state.nombre != '') {
                 this.buscarApellidoNombre(this.state.apePat, this.state.apeMat, this.state.nombre, e);
+                
             } else {
                 swal("Lo sentimos, sólo puede llenar un campo para la búsqueda", "", "info");
             }
@@ -623,10 +644,12 @@ class BuscarNuevo extends React.Component {
     onSubmitGuardar = (e) => {
         console.log("---ACTUALIZA CODIGO Y PROGRAMA EN RECAUDACIONES ---");
         console.log(this.state.objRecaudaciones[0].idRec);
+        
+        console.log("---ALUMNO DEPUES DEL CLICK GUARDAR ---"); //VERIFICAR CON LA CONSOLA
         console.log(this.state.alumno);
         //ANTHONY	
         //alert(this.state.alumno.codAlumno);		
-        //alert(this.state.alumno.idPrograma);
+        //alert(this.state.alumno.nom_programa);
 
         let state_apeNom = this.state.objRecaudaciones[0].apeNom;
         let state_concepto = this.state.objRecaudaciones[0].concepto;
@@ -634,11 +657,22 @@ class BuscarNuevo extends React.Component {
         let state_importe = this.state.objRecaudaciones[0].importe;
         let state_fecha = this.state.objRecaudaciones[0].fecha;
         let state_moneda = this.state.objRecaudaciones[0].moneda;
-
-        let id_alum = this.state.alumno.codAlumno;
-        let id_prog = this.state.alumno.idPrograma;//m
+        
+       
+        
+        let id_alum = this.state.objRecaudaciones[0].codAlum;
+        let id_prog = this.state.objRecaudaciones[0].idProg;
+        let siglaPrograma = '-'; //m-----IMPORTAAAA
+        try {
+                id_alum = this.state.alumno.codAlumno;
+                id_prog = this.state.alumno.idPrograma;
+                siglaPrograma = this.state.alumno.siglaProg; //AHORA CAMBIAR LA REST
+        } catch (error) {
+            console.log(error);
+        }
 
         let objRecibo_estado = "true";
+
 
         if (state_moneda == '108') {
 
@@ -652,7 +686,8 @@ class BuscarNuevo extends React.Component {
                     fecha: state_fecha,
                     estado: objRecibo_estado,
                     codAlumno: id_alum,//m
-                    programa: id_prog//m
+                    programa: id_prog,//m
+                    siglaPrograma: siglaPrograma,
                 }
             });
         } else if (state_moneda == '113') {
@@ -666,7 +701,8 @@ class BuscarNuevo extends React.Component {
                     fecha: state_fecha,
                     estado: objRecibo_estado,
                     codAlumno: id_alum,//m
-                    programa: id_prog//m
+                    programa: id_prog,//m
+                    siglaPrograma: siglaPrograma,
                 }
             });
         } else {
@@ -680,7 +716,8 @@ class BuscarNuevo extends React.Component {
                     fecha: state_fecha,
                     estado: objRecibo_estado,
                     codAlumno: id_alum,//m
-                    programa: id_prog//m
+                    programa: id_prog,
+                    siglaPrograma: siglaPrograma,
                 }
             });
         }
@@ -764,7 +801,8 @@ class BuscarNuevo extends React.Component {
                     fecha: state_fecha,
                     estado: objRecibo_estado,
                     codAlumno: '',//m
-                    programa: ''//m
+                    programa: '',//m
+                    siglaProg: '',//m
                 }
             });
         } else if (state_moneda == '113') {
@@ -778,7 +816,8 @@ class BuscarNuevo extends React.Component {
                     fecha: state_fecha,
                     estado: objRecibo_estado,
                     codAlumno: '',//m
-                    programa: ''//m
+                    programa: '',//m
+                    siglaProg: '',//m
                 }
             });
         } else {
@@ -792,7 +831,8 @@ class BuscarNuevo extends React.Component {
                     fecha: state_fecha,
                     estado: objRecibo_estado,
                     codAlumno: '',//m
-                    programa: ''//m
+                    programa: '',//m
+                    siglaProg: '',//m
                 }
             });
         }
@@ -868,11 +908,16 @@ class BuscarNuevo extends React.Component {
                         var e = {
                             codAlumno: alumnos[i].codAlumno,
                             idPrograma: alumnos[i].idPrograma,
+                            siglaProg: alumnos[i].nom_programa,
                             value: alumnos[i].codAlumno + " / " + alumnos[i].apePaterno + " " + alumnos[i].apeMaterno + " " + alumnos[i].nomAlumno + " / " + alumnos[i].nom_programa,
                             label: alumnos[i].codAlumno + " / " + alumnos[i].apePaterno + " " + alumnos[i].apeMaterno + " " + alumnos[i].nomAlumno + " / " + alumnos[i].nom_programa
                         }
                         Array.push(e);
                     }
+                    
+                this.setState({
+                    mostrarResultadoAlumnos: true,
+                });
                     swal("Consulta realizada exitosamente!", "", "success");
                 } else {
                     swal("No hay registro de ese alumno", " ", "info");
@@ -904,11 +949,16 @@ class BuscarNuevo extends React.Component {
                         var e = {
                             codAlumno: alumnos[i].codAlumno,
                             idPrograma: alumnos[i].idPrograma,
+                            siglaProg: alumnos[i].nom_programa,
                             value: alumnos[i].codAlumno + " / " + alumnos[i].apePaterno + " " + alumnos[i].apeMaterno + " " + alumnos[i].nomAlumno + " / " + alumnos[i].nom_programa,
                             label: alumnos[i].codAlumno + " / " + alumnos[i].apePaterno + " " + alumnos[i].apeMaterno + " " + alumnos[i].nomAlumno + " / " + alumnos[i].nom_programa
                         }
                         Array.push(e);
                     }
+                    
+                this.setState({
+                    mostrarResultadoAlumnos: true,
+                });
                     swal("Consulta realizada exitosamente!", "", "success");
                 } else {
                     swal("No hay registro de ese alumno", " ", "info");
@@ -941,6 +991,8 @@ class BuscarNuevo extends React.Component {
         }
         var nuevoNombre = arreglo.join('&');
 
+        var mostrar=false;
+
         fetch(CONFIG1 + 'alumnoprograma/leer/' + nuevoNombre)
             .then((response) => {
                 return response.json();
@@ -954,11 +1006,13 @@ class BuscarNuevo extends React.Component {
                         var e = {
                             codAlumno: alumnos[i].codAlumno,
                             idPrograma: alumnos[i].idPrograma,
+                            siglaProg: alumnos[i].nom_programa,
                             value: alumnos[i].codAlumno + " / " + alumnos[i].apePaterno + " " + alumnos[i].apeMaterno + " " + alumnos[i].nomAlumno + " / " + alumnos[i].nom_programa,
                             label: alumnos[i].codAlumno + " / " + alumnos[i].apePaterno + " " + alumnos[i].apeMaterno + " " + alumnos[i].nomAlumno + " / " + alumnos[i].nom_programa
                         }
                         Array.push(e);
                     }
+                    mostrar=true;
                     swal("Consulta realizada exitosamente!", "", "success");
                 } else {
                     swal("No hay registro de ese alumno", " ", "info");
@@ -967,6 +1021,7 @@ class BuscarNuevo extends React.Component {
                     opcAlumno: Array,
                     objAlumnos: alumnos,
                     asignarRec: false,
+                    mostrarResultadoAlumnos: mostrar,
                 });
             })
             .catch((error) => {
@@ -984,7 +1039,7 @@ class BuscarNuevo extends React.Component {
                 return response.json();
             })
             .then((alumnos) => {
-                console.log("---Alumnos---");
+                console.log("---Alumnos22---");
                 console.log(alumnos);
                 var Array = [];
                 if (alumnos.length > 0) {
@@ -992,6 +1047,7 @@ class BuscarNuevo extends React.Component {
                         var e = {
                             codAlumno: alumnos[i].codAlumno,
                             idPrograma: alumnos[i].idPrograma,
+                            siglaProg: alumnos[i].nom_programa,
                             value: alumnos[i].codAlumno + " / " + alumnos[i].apePaterno + " " + alumnos[i].apeMaterno + " " + alumnos[i].nomAlumno + " / " + alumnos[i].nom_programa,
                             label: alumnos[i].codAlumno + " / " + alumnos[i].apePaterno + " " + alumnos[i].apeMaterno + " " + alumnos[i].nomAlumno + " / " + alumnos[i].nom_programa
                         }
@@ -1001,7 +1057,6 @@ class BuscarNuevo extends React.Component {
                     this.setState({
                         opcAlumno: Array,
                         objAlumnos: alumnos,
-                        asignarRec: true,
                     });
 
 
@@ -1011,10 +1066,12 @@ class BuscarNuevo extends React.Component {
                         opcAlumno: Array,
                         objAlumnos: alumnos,
                         asignarRec: false,
+                        mostrarResultadoAlumnos: false,
                     });
 
                 }
-
+                console.log("---OBJJ22---");
+                console.log(this.state.objAlumnos[0].nom_programa);
             })
             .catch((error) => {
                 swal("Algo salío mal", "", "error");
